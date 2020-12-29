@@ -1,6 +1,8 @@
 Camera = require "hump/camera"
 require "assets/entities/player"
 
+-- I think I did it! I think I commited!
+
 _entities = {}
 player = Player:new(32, 32)
 
