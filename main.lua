@@ -1,6 +1,8 @@
 Camera = require "hump/camera"
 require "assets/entities/player"
 
+-- Why not commit???
+
 _entities = {}
 player = Player:new(32, 32)
 
