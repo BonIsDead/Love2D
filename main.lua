@@ -1,7 +1,7 @@
 Camera = require "hump/camera"
 require "assets/entities/player"
 
--- Github sucks ass.
+-- Wouldn't it be nice if this worked???
 
 _entities = {}
 player = Player:new(32, 32)
