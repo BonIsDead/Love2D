@@ -6,10 +6,10 @@ local vec2 = require "hump/vector"
 
 -- Player variables
 local acceleration = 16
-local maxSpeed = 96
-local jumpForce = 128
+local maxSpeed = 128
+local jumpForce = 128 + 64
 local airBoost = 6
-local airDrag = 0.8
+local airDrag = 0.4
 local gravity = 12
 local maxFallSpeed = 8
 
@@ -28,11 +28,11 @@ function Player:update(dt)
         self.velocity.y = self.velocity.y + gravity
     end
 
-    if self.position.y > 224-32 then
-        self.position.y = 224-32
+    if self.position.y >= _gameHeight - 16 then
+        self.position.y = _gameHeight - 16
         self.velocity.y = 0
         isGrounded = true
-    elseif self.position.y < 224-32 then
+    elseif self.position.y < _gameHeight - 16 then
         isGrounded = false
     end
 
@@ -42,8 +42,6 @@ function Player:update(dt)
         direction.x = -1
     elseif love.keyboard.isDown("right") then
         direction.x = 1
-    else
-        -- self.velocity.x = self.velocity.x * 0.4
     end
 
     -- Jumping

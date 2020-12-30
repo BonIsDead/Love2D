@@ -205,8 +205,15 @@ function vector:trimmed(maxLen)
 	return self:clone():trimInplace(maxLen)
 end
 
+-- I, Bon, wrote this. It's probably not great!
 function vector:lerp(a,t)
-	return (1 - t) * self + (t * a)
+	local v = self + (a - self) * t
+
+	if v:len() > 0.001 then
+		return v
+	else
+		return new()
+	end
 end
 
 
