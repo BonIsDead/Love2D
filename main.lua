@@ -10,6 +10,9 @@ _entities = {}
 player = Player:new(32, 32)
 
 -- -------------------- Tiles
+-- Path information
+local assets = "assets"
+
 path = love.filesystem.read("assets/levels/test.ldtk")
 mapData = json.decode(path)
 
@@ -35,6 +38,7 @@ local levels = {}
 for i=1,#levelData do
     local ld = levelData[i]
     local l = {}
+    l.tiles = {}
 
     -- Get level data
     l.identifier, l.uid = ld.__identifier, ld.uid
@@ -46,35 +50,39 @@ for i=1,#levelData do
     l.layerInstances = {}
     for i=1,#ld.layerInstances do
         l.layerInstances[i] = ld.layerInstances[i]
+
+        -- Create the tileset texture, fixing file path
+        local tilesetPath = assets .. string.sub(l.layerInstances[i].__tilesetRelPath, 3, -1)
+        if love.filesystem.getInfo(tilesetPath) then
+            l.tilesetTexture = love.graphics.newImage(tilesetPath)
+        else
+            print("Could not locate tileset texture!")
+        end
+
+        local gridSize = l.layerInstances[i].__gridSize
+
+        for ii=1,#ld.layerInstances[i].gridTiles do
+            -- Create tiles
+            local gt = l.layerInstances[i].gridTiles[ii]
+
+            -- Get tile variables
+            local pos,src,f = { ["x"] = gt.px[1], ["y"] = gt.px[2] }, { ["x"] = gt.src[1], ["y"] = gt.src[2] }, gt.f
+
+            -- Create tile
+            local tile = {}
+            tile.pos, tile.src, tile.f = pos, src, f
+            tile.quad = love.graphics.newQuad(src.x, src.y, gridSize, gridSize, l.tilesetTexture)
+
+            -- Add tile to the tiles table
+            table.insert(l.tiles, tile)
+        end
     end
 
     -- Add to the levels table
     table.insert(levels, l)
 end
 
--- It can read the files! Hurray!
-print(levels[1].layerInstances[1].gridTiles[1].px[1] )
-
--- tilesetPath = levels[1].layerInstances[1].__tilesetRelPath
--- tex = love.graphics.newImage(tilesetPath)
-
--- Just here so I don't forget how to do this!!!
--- tex = love.graphics.newImage("assets/spritesheets/FinalFantasy6Tileset.png")
--- tile = love.graphics.newQuad(16,16, 16,16, tex)
-
--- package.path = 
-
 function love.load()
-    print("PP - " .. package.path)
-    print("Love Source - " .. love.filesystem.getSource() )
-    tilesetPath = "../spritesheets/FinalFantasy6Tileset.png" --levels[1].layerInstances[1].__tilesetRelPath
-    print(tilesetPath)
-    if love.filesystem.getInfo(tilesetPath) then
-        print("It worked!")
-    else
-        print("File not found!")
-    end
-
     -- Load entities
     for i, ent in ipairs(_entities) do
         if ent.start then ent:start() end
@@ -89,11 +97,29 @@ function love.update(dt)
 end
 
 function love.draw()
-    -- for x=0,15 do
-    --     for y=0,13 do
-    --         love.graphics.draw(tex, tile, x*16,y*16)
-    --     end
-    -- end
+    -- Draw tileset
+    local l = levels[1]
+    local t = l.tiles
+    local gs = l.layerInstances[1].__gridSize
+
+    for i=1, #t do
+        -- ---------- Set up tile
+        -- Tile flipping
+        -- I'm positive this could be written better, but it works for now!
+        local px,py, sx,sy, f = t[i].pos.x, t[i].pos.y, 1,1, 0
+
+        if (t[i].f == 1) then -- Flip horizontal
+            px = px + gs
+            sx = -1
+        end
+        if (t[i].f == 3) then -- Flip vertical
+            py = py + gs
+            sy = -1
+        end
+
+        -- Draw the tile
+        love.graphics.draw(l.tilesetTexture, t[i].quad, px,py, 0,sx,sy)
+    end
 
     -- Draw entities
     for i, ent in ipairs(_entities) do
