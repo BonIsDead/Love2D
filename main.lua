@@ -1,5 +1,4 @@
 local ldtk = require"assets/scripts/ldtk-importer"
-require "assets/entities/player"
 json = require "lib/json"
 
 -- Global variables
@@ -7,22 +6,26 @@ _gameWidth, _gameHeight, _gameScale = 256, 224, {2, 2}
 _debug = false
 
 _entities = {}
+_entities.name = "_entities"
+
 _currentLevel = 1
 
-Player = Player:new(48, _gameHeight-48)
+Player = require "assets/entities/player"
 
 -- Temporary stuff!!!
-Camera = require "hump.camera"
+Camera = require "lib/hump/camera"
 function clamp(min, val, max) return math.max(min, math.min(val, max) ) end
-vec2 = require("hump/vector")
+vec2 = require("lib/hump/vector")
 
 function love.load()
-    print(_gameScale[1] )
     -- Scale window properly
     love.graphics.setDefaultFilter("nearest")
     camPosition = vec2()
 
     -- Temporary background
+    player = Player(48, _gameHeight-48, _entities)
+    player2 = Player(72, _gameHeight-48, _entities)
+
     bgImage, bgQuad = {}, {}
     bgImage[1] = love.graphics.newImage("assets/spritesheets/CastlevaniaVI_Background1.png")
     bgImage[1]:setWrap("repeat", "clampzero")
@@ -61,7 +64,7 @@ function love.update(dt)
     -- camDx = _gameWidth*0.5 + math.sin(count * 0.02) * _gameWidth*0.5
     -- count = count + 1
 
-    camPosition = camPosition:lerp(Player.position - vec2(_gameWidth*0.5, _gameHeight*0.5), 4 * dt)
+    camPosition = camPosition:lerp(player.position - vec2(_gameWidth*0.5, _gameHeight*0.5), 4 * dt)
     camPosition = camPosition:clamped(0,256, 0,0)
 
     currentCamera:lookAt(math.floor(camPosition.x) + _gameWidth*0.5, math.floor(camPosition.y) + _gameHeight*0.5)

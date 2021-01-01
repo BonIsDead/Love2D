@@ -2,13 +2,16 @@
 local class = require "lib/middleclass"
 Entity = class("Entity")
 -- Components
-local vec2 = require "hump/vector"
+local vec2 = require "lib/hump/vector"
 
-function Entity:initialize(x,y, w,h)
+function Entity:initialize(x,y, t)
     self.position = vec2(x,y)
     self.velocity = vec2()
+    self.tableName = t.name
 
-    table.insert(_entities, self)
+    table.insert(t, self)
+    self.id = #t
+    print(self.id)
 end
 
 function Entity:move(dt)
@@ -37,6 +40,17 @@ function Entity:move(dt)
 
     -- The old, temporary way
     -- self.position = self.position + self.velocity * dt
+end
+
+-- Fix this later!!! It doesn't work!
+function Entity:destroy()
+    local t = _G[self.tableName]
+
+    for i=1, #t do
+        if t[i].id == self.id then
+            table.remove(t[i], i)
+        end
+    end
 end
 
 function Entity:draw()

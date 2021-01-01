@@ -1,8 +1,8 @@
 -- Class
 local class = require "lib/middleclass"
-Player = class("Player", require "lib/entity")
+local Player = class("Player", require "lib/entity")
 -- Components
-local vec2 = require "hump/vector"
+local vec2 = require "lib/hump/vector"
 
 -- Player variables
 local acceleration = 16
@@ -51,6 +51,11 @@ function Player:update(dt)
         if self.velocity.y < 0 then
             self.velocity.y = self.velocity.y - airBoost
         end
+    end
+
+    -- TEMP
+    if love.keyboard.isDown("space") then
+        self:destroy()
     end
 
     -- Smooth out horizontal velocity
