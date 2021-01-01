@@ -7,11 +7,11 @@ local vec2 = require "lib/hump/vector"
 function Entity:initialize(x,y, t)
     self.position = vec2(x,y)
     self.velocity = vec2()
-    self.tableName = t.name
+    self.parent = t
 
+    -- Add to table
     table.insert(t, self)
-    self.id = #t
-    print(self.id)
+    self.index = #t
 end
 
 function Entity:move(dt)
@@ -44,17 +44,18 @@ end
 
 -- Fix this later!!! It doesn't work!
 function Entity:destroy()
-    local t = _G[self.tableName]
-
-    for i=1, #t do
-        if t[i].id == self.id then
-            table.remove(t[i], i)
+    for key, value in ipairs(self.parent) do
+        if (value.index == self.index) then
+            table.remove(self.parent, key)
         end
     end
+
 end
 
-function Entity:draw()
-    love.graphics.rectangle("line", self.position.x, self.position.y, 32, 32)
+function Entity:draw() end
+
+function Entity:drawDebug()
+    -- love.graphics.print(self.index, self.position.x, self.position.y - 32)
 end
 
 return Entity

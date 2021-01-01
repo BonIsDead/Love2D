@@ -2,8 +2,8 @@ local ldtk = require"assets/scripts/ldtk-importer"
 json = require "lib/json"
 
 -- Global variables
-_gameWidth, _gameHeight, _gameScale = 256, 224, {2, 2}
-_debug = false
+_gameWidth, _gameHeight, _gameScale = 256, 224, {1, 1}
+_debug = true
 
 _entities = {}
 _entities.name = "_entities"
@@ -18,14 +18,14 @@ function clamp(min, val, max) return math.max(min, math.min(val, max) ) end
 vec2 = require("lib/hump/vector")
 
 function love.load()
+    -- Temp player creation
+    player = Player(48, _gameHeight-48, _entities)
+
     -- Scale window properly
     love.graphics.setDefaultFilter("nearest")
     camPosition = vec2()
 
     -- Temporary background
-    player = Player(48, _gameHeight-48, _entities)
-    player2 = Player(72, _gameHeight-48, _entities)
-
     bgImage, bgQuad = {}, {}
     bgImage[1] = love.graphics.newImage("assets/spritesheets/CastlevaniaVI_Background1.png")
     bgImage[1]:setWrap("repeat", "clampzero")
@@ -89,6 +89,10 @@ function love.draw()
         -- Draw entities
         for i, ent in ipairs(_entities) do
             if ent.draw then ent:draw() end
+
+            if (_debug == true) then
+                if ent.drawDebug then ent:drawDebug() end
+            end
         end
     currentCamera:detach()
 

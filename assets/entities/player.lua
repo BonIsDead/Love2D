@@ -53,11 +53,6 @@ function Player:update(dt)
         end
     end
 
-    -- TEMP
-    if love.keyboard.isDown("space") then
-        self:destroy()
-    end
-
     -- Smooth out horizontal velocity
     local accel = acceleration
     if isGrounded == false then accel = accel * airDrag end

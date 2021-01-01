@@ -78,14 +78,26 @@ function LDtk:draw(camera) -- Takes a camera to know what to ignore, for now!
         local size = (#LDtkWorld.levels[currentLevel].layerInstances + 1) - i
         local li = LDtkWorld.levels[currentLevel].layerInstances[size]
 
-        local margin = -16
+        local margin = 16
         local left, right = (camX - _gameWidth/2) + margin, (camX + _gameWidth/2) - margin
         local up, down = (camY - _gameHeight/2) + margin, (camY + _gameWidth/2) - margin
 
         for j=1, #li.quadTiles do
             local tile = li.quadTiles[j]
+
+            -- Flip and adjust tiles... probably could be better!
+            local sx,sy, ox,oy = 1,1, 0,0
+            if (tile.f == 1) or (tile.f == 3) then  -- Horizontal flip and offset
+                ox = li.__gridSize
+                sx = -1
+            end
+            if (tile.f == 2) or (tile.f == 3) then  -- Vertical flip and offset
+                oy = li.__gridSize
+                sy = -1
+            end
+
             if (tile.pos.x >= left) and (tile.pos.x <= right) and (tile.pos.y >= up) and (tile.pos.y <= down) then
-                love.graphics.draw(li.tilesetImage, tile.quad, tile.pos.x, tile.pos.y)
+                love.graphics.draw(li.tilesetImage, tile.quad, tile.pos.x, tile.pos.y, 0, sx, sy, ox, oy)
             end
         end
     end
