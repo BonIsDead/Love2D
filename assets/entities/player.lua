@@ -28,8 +28,8 @@ function Player:update(dt)
         self.velocity.y = self.velocity.y + gravity
     end
 
-    if self.position.y >= _gameHeight - 16 then
-        self.position.y = _gameHeight - 16
+    if self.position.y >= _gameHeight -32 - 16 then
+        self.position.y = _gameHeight -32 - 16
         self.velocity.y = 0
         isGrounded = true
     elseif self.position.y < _gameHeight - 16 then
@@ -66,15 +66,9 @@ function Player:update(dt)
 end
 
 function Player:draw()
-    local dx = math.floor(self.position.x)
-    local dy = math.floor(self.position.y)
+    local dx, dy = math.floor(self.position.x), math.floor(self.position.y)
 
-    if isGrounded == true then
-        love.graphics.setColor(0,1,0,0.2)
-        love.graphics.rectangle("fill", dx-spriteWidth/2, dy-spriteHeight/2, 32, 32)
-    end
-
-    love.graphics.setColor(1,1,1,1)
+    -- love.graphics.setColor(1,1,1,1)
     love.graphics.draw(sprite, dx, dy, 0, 1,1, spriteWidth/2, spriteHeight/2)
 end
 

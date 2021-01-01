@@ -216,6 +216,13 @@ function vector:lerp(a,t)
 	end
 end
 
+local function clamp(min, val, max) return math.max(min, math.min(val, max) ) end
+
+function vector:clamped(xmin,xmax,ymin,ymax)
+	self.x, self.y = clamp(xmin, self.x, xmax), clamp(ymin, self.y, ymax)
+	return self
+end
+
 
 -- the module
 return setmetatable({
