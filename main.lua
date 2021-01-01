@@ -2,7 +2,7 @@ local ldtk = require"assets/scripts/ldtk-importer"
 json = require "lib/json"
 
 -- Global variables
-_gameWidth, _gameHeight, _gameScale = 256, 224, {1, 1}
+_gameWidth, _gameHeight, _gameScale = 256, 224, {2, 2}
 _debug = true
 
 _entities = {}

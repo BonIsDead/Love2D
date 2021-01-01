@@ -78,7 +78,7 @@ function LDtk:draw(camera) -- Takes a camera to know what to ignore, for now!
         local size = (#LDtkWorld.levels[currentLevel].layerInstances + 1) - i
         local li = LDtkWorld.levels[currentLevel].layerInstances[size]
 
-        local margin = 16
+        local margin = -16
         local left, right = (camX - _gameWidth/2) + margin, (camX + _gameWidth/2) - margin
         local up, down = (camY - _gameHeight/2) + margin, (camY + _gameWidth/2) - margin
 
