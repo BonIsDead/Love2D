@@ -23,18 +23,28 @@ function Player:start()
 end
 
 function Player:update(dt)
+    isGrounded = self:checkGrounded(4)
+
     -- Gravity
     if isGrounded == false then
         self.velocity.y = self.velocity.y + gravity
     end
 
-    if self.position.y >= _gameHeight -32 - 16 then
-        self.position.y = _gameHeight -32 - 16
+    if (isGrounded == true) then
+        if (self.velocity.y >= 0) then
+            local ax,ay,cols,len = self.world:check(self, self.position.x,self.position.y + 4)
+            if len > 0 then self.position.y = cols[1].touch.y end
+        end
         self.velocity.y = 0
-        isGrounded = true
-    elseif self.position.y < _gameHeight - 16 then
-        isGrounded = false
     end
+
+    -- if self.position.y >= _gameHeight -32 - 16 then
+    --     self.position.y = _gameHeight -32 - 16
+    --     self.velocity.y = 0
+    --     isGrounded = true
+    -- elseif self.position.y < _gameHeight - 16 then
+    --     -- isGrounded = false
+    -- end
 
     -- Get input
     local direction = vec2()
@@ -51,6 +61,10 @@ function Player:update(dt)
         if self.velocity.y < 0 then
             self.velocity.y = self.velocity.y - airBoost
         end
+    end
+
+    if love.keyboard.isDown("space") then
+        self:destroy()
     end
 
     -- Smooth out horizontal velocity
@@ -70,6 +84,24 @@ function Player:draw()
 
     -- love.graphics.setColor(1,1,1,1)
     love.graphics.draw(sprite, dx, dy, 0, 1,1, spriteWidth/2, spriteHeight/2)
+end
+
+function Player:drawDebug()
+    if isGrounded == true then
+        love.graphics.setColor(0,1,0,0.25)
+        love.graphics.rectangle("fill", self.position.x-16,self.position.y-16, 32,32)
+        love.graphics.setColor(1,1,1,1)
+    end
+end
+
+function Player:checkGrounded(length)
+    local goalPosition = self.position + vec2(0,length)
+    local ax,ay, cols, len = self.world:check(self, goalPosition.x, goalPosition.y)
+    if len >= 1 then
+        return true
+    else
+        return false
+    end
 end
 
 return Player

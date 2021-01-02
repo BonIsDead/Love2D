@@ -3,23 +3,32 @@ json = require "lib/json"
 
 -- Global variables
 _gameWidth, _gameHeight, _gameScale = 256, 224, {2, 2}
-_debug = true
+_debug = true 
 
+-- Object tables
 _entities = {}
 _entities.name = "_entities"
 
 _currentLevel = 1
 
+-- ---------- Temporary things
+-- Bump settings
+local bump = require "lib/bump"
+local world = bump.newWorld()
+
+-- Player component
 Player = require "assets/entities/player"
 
--- Temporary stuff!!!
+-- Camera
 Camera = require "lib/hump/camera"
 function clamp(min, val, max) return math.max(min, math.min(val, max) ) end
 vec2 = require("lib/hump/vector")
 
 function love.load()
     -- Temp player creation
-    player = Player(48, _gameHeight-48, _entities)
+    player = Player(world, 48,_gameHeight-48, _entities)
+    -- local block = {x=128,y=128+32,w=64,h=64}
+    -- world:add(block, block.x,block.y,block.w,block.h)
 
     -- Scale window properly
     love.graphics.setDefaultFilter("nearest")
@@ -40,8 +49,8 @@ function love.load()
     camPosition.x, camPosition.y = currentCamera:position()
 
     -- Create tilemap
-    ldtkMap = ldtk:new("assets/levels/test.ldtk")
-    -- love.graphics.setBackgroundColor(0.5,0.5,0.5, 0.5)
+    ldtkMap = ldtk:new("assets/levels/test.ldtk", world)
+    ldtkMap:addCollisions(_currentLevel, world)
 
     -- Load entities
     for i, ent in ipairs(_entities) do
@@ -66,14 +75,26 @@ function love.update(dt)
 
     camPosition = camPosition:lerp(player.position - vec2(_gameWidth*0.5, _gameHeight*0.5), 4 * dt)
     camPosition = camPosition:clamped(0,256, 0,0)
-
     currentCamera:lookAt(math.floor(camPosition.x) + _gameWidth*0.5, math.floor(camPosition.y) + _gameHeight*0.5)
+
+    -- Bump world
+    if love.keyboard.isDown("space") then
+        print(world:getItems() )
+    end
 
     -- Update entities
     for i, ent in ipairs(_entities) do
         if ent.update then ent:update(dt) end
     end
 end
+
+local function drawAllBumpItems(world)
+    local items = world:getItems()
+    for _,item in ipairs(items) do
+      local x,y,w,h = world:getRect(item)
+      love.graphics.rectangle("line", x,y,w,h)
+    end
+  end
 
 function love.draw()
     love.graphics.scale(_gameScale[1], _gameScale[2] )
@@ -94,6 +115,8 @@ function love.draw()
                 if ent.drawDebug then ent:drawDebug() end
             end
         end
+
+        drawAllBumpItems(world)
     currentCamera:detach()
 
     -- Draw Hud

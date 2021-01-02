@@ -4,9 +4,10 @@ LDtk = class("LDtk")
 -- References
 local assets = "assets"
 
+-- Tilemap settings
 local LDtkWorld = {}
 
-function LDtk:initialize(LDtkPath)
+function LDtk:initialize(LDtkPath, bumpWorld)
     local map = {}
 
     -- Check file & create JSON
@@ -51,7 +52,7 @@ function LDtk:initialize(LDtkPath)
                     tile.pos    = { ["x"] = gt.px[1], ["y"] = gt.px[2] }
                     tile.src    = { ["x"] = gt.src[1], ["y"] = gt.src[2] }
                     tile.f      = gt.f
-                    tile.quad   = love.graphics.newQuad(tile.src.x, tile.src.y, 16, 16, l.tilesetImage)
+                    tile.quad   = love.graphics.newQuad(tile.src.x, tile.src.y, l.__gridSize, l.__gridSize, l.tilesetImage)
                     
                     -- Add tile to tiles table
                     table.insert(map.levels[i].layerInstances[j].quadTiles, tile)
@@ -65,7 +66,28 @@ function LDtk:initialize(LDtkPath)
     LDtkWorld = map
 end
 
-function LDtk:getLevel(lvl)
+function LDtk:addCollisions(level, world)
+    -- Add tile to bump world
+    -- for i=1, #LDtkWorld.levels[level].layerInstances do
+    --     for j=1, #LDtkWorld.levels[level].layerInstances[j].quadTiles do
+    --         bumpWorld:add(tile, tile.pos.x,tile.pos.y, l.__gridSize,l.__gridSize)
+    --     end
+    -- end
+
+    local layerInstances = LDtkWorld.levels[level].layerInstances
+
+    -- Iterate through layers
+    for i=1, #layerInstances do
+        if layerInstances[i].__identifier == "Collisions" then
+            for j=1, #layerInstances[i].quadTiles do
+                local tile = layerInstances[i].quadTiles[j]
+                local gridSize = layerInstances[i].__gridSize
+
+                world:add(tile, tile.pos.x,tile.pos.y, gridSize,gridSize)
+            end
+        end
+    end
+     
 end
 
 function LDtk:draw(camera) -- Takes a camera to know what to ignore, for now!
