@@ -49,10 +49,11 @@ function LDtk:initialize(LDtkPath, bumpWorld)
                     local gt = l.gridTiles[k]
                     local tile = {}
 
-                    tile.pos    = { ["x"] = gt.px[1], ["y"] = gt.px[2] }
-                    tile.src    = { ["x"] = gt.src[1], ["y"] = gt.src[2] }
-                    tile.f      = gt.f
-                    tile.quad   = love.graphics.newQuad(tile.src.x, tile.src.y, l.__gridSize, l.__gridSize, l.tilesetImage)
+                    tile.pos        = { ["x"] = gt.px[1], ["y"] = gt.px[2] }
+                    tile.src        = { ["x"] = gt.src[1], ["y"] = gt.src[2] }
+                    tile.f          = gt.f
+                    tile.quad       = love.graphics.newQuad(tile.src.x, tile.src.y, l.__gridSize, l.__gridSize, l.tilesetImage)
+                    tile.isGround   = true
                     
                     -- Add tile to tiles table
                     table.insert(map.levels[i].layerInstances[j].quadTiles, tile)

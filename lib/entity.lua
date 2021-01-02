@@ -48,10 +48,6 @@ function Entity:move(dt)
     local realX,realY, colls, len = self.world:check(self, goalPosition.x,goalPosition.y)
     self.world:update(self, realX,realY)
     self.position = vec2(realX,realY)
-
-    for i=1, len do
-        print("Collision detected!")
-    end
 end
 
 -- Fix this later!!! It doesn't work!
@@ -63,6 +59,14 @@ function Entity:destroy()
         end
     end
 
+end
+
+function Entity:checkCollision(checkPosition)
+    local ax,ay,cols,len = self.world:check(self, checkPosition.x,checkPosition.y)
+
+    for i=1, len do
+        local other = cols[i].other
+    end
 end
 
 function Entity:draw() end

@@ -3,7 +3,7 @@ json = require "lib/json"
 
 -- Global variables
 _gameWidth, _gameHeight, _gameScale = 256, 224, {2, 2}
-_debug = true 
+_debug = false 
 
 -- Object tables
 _entities = {}
@@ -115,8 +115,8 @@ function love.draw()
                 if ent.drawDebug then ent:drawDebug() end
             end
         end
-
-        drawAllBumpItems(world)
+        
+        if (_debug == true) then drawAllBumpItems(world) end
     currentCamera:detach()
 
     -- Draw Hud
