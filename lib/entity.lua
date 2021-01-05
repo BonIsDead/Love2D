@@ -5,45 +5,36 @@ Entity = class("Entity")
 local vec2 = require "lib/hump/vector"
 
 function Entity:initialize(bumpWorld, x,y, t)
+    -- ---------- Initializing an entity
     self.world      = bumpWorld
     self.position   = vec2(x,y)
     self.velocity   = vec2()
+    -- Collision shape
+    self.aabb       = vec2(16,16)
+    self.aabbOffset = vec2(8,8)
+    -- Other Information
     self.parent     = t
-    self.collidable = true
+    self.index      = #t
+    self.destroyed  = false
 
-    -- Add to table
+    -- ---------- Add to parent table and collision world
     table.insert(t, self)
-    self.index = #t
-    -- Add to bump world
-    bumpWorld:add(self, self.position.x,self.position.y, 16,16)
+    self:UpdateBumpShape()
+end
+
+function Entity:UpdateBumpShape()
+    -- Remove self from bump world
+    if self.world:hasItem(self) then self.world:remove(self) end
+    -- Change and update shape
+    local dx,dy = (self.position.x - self.aabbOffset.x), (self.position.y - self.aabbOffset.y)
+    self.world:add(self, dx,dy, self.aabb.x,self.aabb.y)
 end
 
 function Entity:move(dt)
-    -- Move the entity, with "collisions"
-    -- local ax,ay, colls, len = self.world:move()
+    -- Make sure the entity exists
+    if self.destroyed == true then return end
 
-    -- local nx = 0
-    -- while (nx < math.abs(self.velocity.x) ) do
-    --     if self.position.x <= _gameWidth*2 - 16 then
-    --         fx = fx + self.velocity:normalized().x * dt
-    --         nx = nx + 1
-    --     else
-    --         fx = _gameWidth*2 - 16
-    --         self.velocity.x = 0
-    --     end
-    -- end
-
-    -- local ny = 0
-    -- while (ny < math.abs(self.velocity.y) ) do
-    --     if fy <= _gameHeight-32 - 16 then
-    --         fy = fy + self.velocity:normalized().y * dt
-    --         ny = ny + 1
-    --     else
-    --         fy = _gameHeight-32 - 16
-    --         self.velocity.y = 0
-    --     end
-    -- end
-
+    -- Move the entity, with "collisions
     local goalPosition = self.position + self.velocity * dt
     local realX,realY, colls, len = self.world:check(self, goalPosition.x,goalPosition.y)
     self.world:update(self, realX,realY)
@@ -54,7 +45,8 @@ end
 function Entity:destroy()
     for key, value in ipairs(self.parent) do
         if (value.index == self.index) then
-            -- self.world:remove(self)
+            self.destroyed = true
+            self.world:remove(self)
             table.remove(self.parent, key)
         end
     end
@@ -70,9 +62,6 @@ function Entity:checkCollision(checkPosition)
 end
 
 function Entity:draw() end
-
-function Entity:drawDebug()
-    -- love.graphics.print(self.index, self.position.x, self.position.y - 32)
-end
+function Entity:drawDebug() end
 
 return Entity

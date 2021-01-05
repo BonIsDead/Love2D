@@ -3,7 +3,8 @@ json = require "lib/json"
 
 -- Global variables
 _gameWidth, _gameHeight, _gameScale = 256, 224, {2, 2}
-_debug = false 
+_debug = false
+print("Press 'Q' to enable Bump debug!")
 
 -- Object tables
 _entities = {}
@@ -54,33 +55,25 @@ function love.load()
 
     -- Load entities
     for i, ent in ipairs(_entities) do
-        if ent.start then ent:start() end
+        if ent.load then ent:load() end
     end
 end
 
-local count = 1
+function love.keypressed(key)
+    if key == "escape" then
+        love.event.quit()
+    end
+
+    if key == "q" then
+        _debug = not _debug
+    end
+end
 
 function love.update(dt)
-    -- Pan the camera for now
-    -- Don't know how I want the camera to be controlled, yet!
-    -- local camSpeed = 96
-    -- if love.keyboard.isDown("up") then      camDy = (camDy - camSpeed * dt) end
-    -- if love.keyboard.isDown("left") then    camDx = (camDx - camSpeed * dt) end
-    -- if love.keyboard.isDown("down") then    camDy = (camDy + camSpeed * dt) end
-    -- if love.keyboard.isDown("right") then      camDx = (camDx + camSpeed * dt) end
-    -- camDx = clamp(0, camDx, 256)
-    -- camDy = clamp(0, camDy, 256)
-    -- camDx = _gameWidth*0.5 + math.sin(count * 0.02) * _gameWidth*0.5
-    -- count = count + 1
-
+    -- Temporary camera movement
     camPosition = camPosition:lerp(player.position - vec2(_gameWidth*0.5, _gameHeight*0.5), 4 * dt)
     camPosition = camPosition:clamped(0,256, 0,0)
     currentCamera:lookAt(math.floor(camPosition.x) + _gameWidth*0.5, math.floor(camPosition.y) + _gameHeight*0.5)
-
-    -- Bump world
-    if love.keyboard.isDown("space") then
-        print(world:getItems() )
-    end
 
     -- Update entities
     for i, ent in ipairs(_entities) do
@@ -89,6 +82,7 @@ function love.update(dt)
 end
 
 local function drawAllBumpItems(world)
+    -- Draw bump world debug
     local items = world:getItems()
     for _,item in ipairs(items) do
       local x,y,w,h = world:getRect(item)

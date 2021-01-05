@@ -7,8 +7,8 @@ local vec2 = require "lib/hump/vector"
 -- Player variables
 local acceleration = 16
 local maxSpeed = 128
-local jumpForce = 128 + 64
-local airBoost = 6
+local jumpForce = 128+32
+local airBoost = 7
 local airDrag = 0.4
 local gravity = 12
 local maxFallSpeed = 8
@@ -16,10 +16,14 @@ local maxFallSpeed = 8
 local isGrounded = false
 local canJump = false
 
-function Player:start()
+function Player:load()
+    self.aabb = vec2(16,16)
+    self.aabbOffset = vec2(8,8)
+
     sprite = love.graphics.newImage("assets/sprites/Alfred.png")
     spriteWidth = sprite:getWidth()
     spriteHeight = sprite:getHeight()
+    self:UpdateBumpShape()
 end
 
 function Player:update(dt)
@@ -75,7 +79,8 @@ function Player:update(dt)
     end
 
     if love.keyboard.isDown("space") then
-        self:destroy()
+        -- self:destroy()
+        print(self.aabb)
     end
 
     -- -------------------- Update Player Movement

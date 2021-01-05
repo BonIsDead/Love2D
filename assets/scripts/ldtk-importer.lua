@@ -16,7 +16,6 @@ function LDtk:initialize(LDtkPath, bumpWorld)
         print("The LDtk file specified could not be found!")
         return
     else
-        print("LDtk Map Loaded.")
         data = json.decode(filePath)
     end
 
@@ -25,21 +24,21 @@ function LDtk:initialize(LDtkPath, bumpWorld)
     map.defs = data.defs
     map.levels = data.levels
     map.totalLevels = #map.levels
-    print(map.totalLevels)
 
     -- Populate layers
     for i=1, #map.levels do
         for j=1, #map.levels[i].layerInstances do
             local l = map.levels[i].layerInstances[j]
 
-            -- Create tile quads table
-            map.levels[i].layerInstances[j].quadTiles = {}
-
+            -- ---------- Populate entities
+            map.levels[i].layerInstances[j].entities = {}
             -- Check for entity layers
             if (l.__type == "Entity") then
-                -- blah
+                -- Create the entities
             end
 
+            -- ---------- Populate grid tiles
+            map.levels[i].layerInstances[j].quadTiles = {}
             -- Check for tile layers
             if (l.__type == "Tiles") then
                 local tilesetPath   = assets .. string.sub(l.__tilesetRelPath, 3, -1)
