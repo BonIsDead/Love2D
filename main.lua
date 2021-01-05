@@ -17,23 +17,17 @@ _currentLevel = 1
 local bump = require "lib/bump"
 local world = bump.newWorld()
 
--- Player component
-Player = require "assets/entities/player"
-
 -- Camera
 Camera = require "lib/hump/camera"
 function clamp(min, val, max) return math.max(min, math.min(val, max) ) end
 vec2 = require("lib/hump/vector")
 
-function love.load()
-    -- Temp player creation
-    player = Player(world, 48,_gameHeight-48, _entities)
-    -- local block = {x=128,y=128+32,w=64,h=64}
-    -- world:add(block, block.x,block.y,block.w,block.h)
+local camPosition   = vec2()
+local camTarget     = nil
 
+function love.load()
     -- Scale window properly
     love.graphics.setDefaultFilter("nearest")
-    camPosition = vec2()
 
     -- Temporary background
     bgImage, bgQuad = {}, {}
@@ -57,6 +51,13 @@ function love.load()
     for i, ent in ipairs(_entities) do
         if ent.load then ent:load() end
     end
+
+    -- Set camera to player instance -- TEMP
+    for i, v in ipairs(_entities) do
+        if v.type == "player" then
+            camTarget = v
+        end
+    end
 end
 
 function love.keypressed(key)
@@ -71,7 +72,7 @@ end
 
 function love.update(dt)
     -- Temporary camera movement
-    camPosition = camPosition:lerp(player.position - vec2(_gameWidth*0.5, _gameHeight*0.5), 4 * dt)
+    camPosition = camPosition:lerp(camTarget.position - vec2(_gameWidth*0.5, _gameHeight*0.5), 4 * dt)
     camPosition = camPosition:clamped(0,256, 0,0)
     currentCamera:lookAt(math.floor(camPosition.x) + _gameWidth*0.5, math.floor(camPosition.y) + _gameHeight*0.5)
 

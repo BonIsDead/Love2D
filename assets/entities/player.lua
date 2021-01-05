@@ -4,25 +4,34 @@ local Player = class("Player", require "lib/entity")
 -- Components
 local vec2 = require "lib/hump/vector"
 
--- Player variables
-local acceleration = 16
-local maxSpeed = 128
-local jumpForce = 128+32
-local airBoost = 7
-local airDrag = 0.4
-local gravity = 12
-local maxFallSpeed = 8
-
-local isGrounded = false
-local canJump = false
+-- Local player variables
+local acceleration  = 8
+local maxSpeed      = 128
+local jumpForce     = 128+32
+local airBoost      = 7
+local airDrag       = 0.4
+local gravity       = 12
+local maxFallSpeed  = 8
+local canJump       = false
 
 function Player:load()
-    self.aabb = vec2(16,16)
-    self.aabbOffset = vec2(8,8)
+    -- Set player on the floor
+    self.position.y = self.position.y + 4
 
-    sprite = love.graphics.newImage("assets/sprites/Alfred.png")
-    spriteWidth = sprite:getWidth()
-    spriteHeight = sprite:getHeight()
+    -- Player variables
+    self.type           = "player"
+    self.isGrounded     = false
+
+    -- Set graphics
+    self.sprite = {}
+    self.sprite.graphic = love.graphics.newImage("assets/sprites/Alfred.png")
+    self.sprite.width   = self.sprite.graphic:getWidth()
+    self.sprite.height  = self.sprite.graphic:getHeight()
+    self.sprite.offset  = vec2(0,-10)
+
+    -- Change collision shape
+    self.aabb.width     = 8
+    self.aabb.height    = 12
     self:UpdateBumpShape()
 end
 
@@ -38,7 +47,7 @@ function Player:update(dt)
         for i=1, len do
             local other = cols[i].other
 
-            if other.isGround then
+            if other.isSolid then
                 if self.velocity.y > 0 then
                     self.position.y = cols[i].touch.y
                     self.velocity.y = 0
@@ -52,7 +61,7 @@ function Player:update(dt)
         for i=1, len do
             local other = cols[i].other
 
-            if other.isGround then
+            if other.isSolid then
                 self.velocity.y = 0
             end
         end
@@ -92,30 +101,58 @@ function Player:update(dt)
     temp = temp:lerp(goal, accel * dt)
     self.velocity.x = temp.x
 
-    self:move(dt)
+    self:movePlayer(dt)
 end
 
-function Player:draw()
-    local dx, dy = math.floor(self.position.x), math.floor(self.position.y)
+function Player:movePlayer(dt)
+    if (self.destroyed == true) then return end
 
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(sprite, dx, dy, 0, 1,1, 8,spriteHeight/2)
-end
+    local filter = function(item, other)
+        if other.isCollectible      then return "cross"
+        elseif other.isSolid        then return "slide"
+        end
+    end
 
-function Player:drawDebug()
-    if isGrounded == true then
-        love.graphics.setColor(0,1,0,0.25)
-        love.graphics.rectangle("fill", self.position.x,self.position.y, 16,16)
-        love.graphics.setColor(1,1,1,1)
+    local goalPosition      = self.position + self.velocity * dt
+    local ax,ay,cols,len    = self.world:check(self, goalPosition.x,goalPosition.y, filter)
+    self.world:update(self, ax,ay)
+    self.position = vec2(ax,ay)
+
+    for i=1, len do
+        local other = cols[i].other
+
+        if other.isCollectible then
+            other:destroy()
+        end
     end
 end
 
+function Player:draw()
+    local dx,dy = math.floor(self.position.x), math.floor(self.position.y)
+    local ox    = self.sprite.width/2 - self.aabb.width/2 - self.sprite.offset.x
+    local oy    = self.sprite.height/2 - self.aabb.height/2 - self.sprite.offset.y
+
+    love.graphics.setColor(1,1,1,1)
+    love.graphics.draw(self.sprite.graphic, dx, dy, 0, 1,1, ox,oy)
+end
+
+function Player:drawDebug()
+    -- View player center(white), as well as player aabb center(green)
+    love.graphics.circle("line", self.position.x,self.position.y, 3)
+    love.graphics.setColor(0,1,0,1)
+    local px,py = self.position.x + self.aabb.width/2, self.position.y + self.aabb.height/2
+    love.graphics.circle("line", px,py, 3)
+
+    -- Reset color
+    love.graphics.setColor(1,1,1,1)
+end
+
 function Player:checkGrounded()
-    local ax,ay,cols,len = self.world:check(self, self.position.x,self.position.y + 4)
+    local ax,ay,cols,len = self.world:check(self, self.position.x,self.position.y + 1)
     local ground = false
 
     for i=1, len do
-        if cols[i].other.isGround then
+        if cols[i].other.isSolid then
             ground = true
         end
     end

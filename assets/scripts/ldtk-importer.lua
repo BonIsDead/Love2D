@@ -33,8 +33,20 @@ function LDtk:initialize(LDtkPath, bumpWorld)
             -- ---------- Populate entities
             map.levels[i].layerInstances[j].entities = {}
             -- Check for entity layers
-            if (l.__type == "Entity") then
+            if (l.__type == "Entities") then
                 -- Create the entities
+                for m=1, #l.entityInstances do
+                    -- Get field instances
+                    for f=1, #l.entityInstances[m].fieldInstances do
+                        local ent       = l.entityInstances[m]
+                        local entField  = ent.fieldInstances[f]
+
+                        if entField.__identifier == "entityPath" then
+                            local entInstance = require(entField.__value)
+                            local e = entInstance(bumpWorld, ent.px[1],ent.px[2], _entities)
+                        end
+                    end
+                end
             end
 
             -- ---------- Populate grid tiles
@@ -52,7 +64,7 @@ function LDtk:initialize(LDtkPath, bumpWorld)
                     tile.src        = { ["x"] = gt.src[1], ["y"] = gt.src[2] }
                     tile.f          = gt.f
                     tile.quad       = love.graphics.newQuad(tile.src.x, tile.src.y, l.__gridSize, l.__gridSize, l.tilesetImage)
-                    tile.isGround   = true
+                    tile.isSolid    = true
                     
                     -- Add tile to tiles table
                     table.insert(map.levels[i].layerInstances[j].quadTiles, tile)

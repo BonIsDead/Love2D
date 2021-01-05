@@ -10,8 +10,7 @@ function Entity:initialize(bumpWorld, x,y, t)
     self.position   = vec2(x,y)
     self.velocity   = vec2()
     -- Collision shape
-    self.aabb       = vec2(16,16)
-    self.aabbOffset = vec2(8,8)
+    self.aabb       = { ["width"] = 8, ["height"] = 12, ["offsetx"] = 0, ["offsety"] = 0 }
     -- Other Information
     self.parent     = t
     self.index      = #t
@@ -26,19 +25,11 @@ function Entity:UpdateBumpShape()
     -- Remove self from bump world
     if self.world:hasItem(self) then self.world:remove(self) end
     -- Change and update shape
-    local dx,dy = (self.position.x - self.aabbOffset.x), (self.position.y - self.aabbOffset.y)
-    self.world:add(self, dx,dy, self.aabb.x,self.aabb.y)
-end
+    -- local dx,dy = (self.position.x + self.aabbOffset.x), (self.position.y + self.aabbOffset.y)
+    -- self.world:add(self, dx,dy, self.aabb.x,self.aabb.y)
 
-function Entity:move(dt)
-    -- Make sure the entity exists
-    if self.destroyed == true then return end
-
-    -- Move the entity, with "collisions
-    local goalPosition = self.position + self.velocity * dt
-    local realX,realY, colls, len = self.world:check(self, goalPosition.x,goalPosition.y)
-    self.world:update(self, realX,realY)
-    self.position = vec2(realX,realY)
+    -- local w,h = math.abs(self.aabb.left) + self.aabb.right, math.abs(self.aabb.top) + self.aabb.bottom
+    self.world:add(self, self.position.x + self.aabb.offsetx,self.position.y + self.aabb.offsety, self.aabb.width,self.aabb.height)
 end
 
 -- Fix this later!!! It doesn't work!

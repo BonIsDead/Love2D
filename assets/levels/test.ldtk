@@ -13,7 +13,7 @@
 	"defaultGridSize": 16,
 	"bgColor": "#7F8093",
 	"defaultLevelBgColor": "#7F8093",
-	"nextUid": 14,
+	"nextUid": 17,
 	"minifyJson": false,
 	"exportTiled": false,
 	"worldLayout": "LinearHorizontal",
@@ -87,11 +87,11 @@
 				"tileRenderMode": "Stretch",
 				"maxPerLevel": 0,
 				"limitBehavior": "DiscardOldOnes",
-				"pivotX": 0,
-				"pivotY": 0,
+				"pivotX": 0.5,
+				"pivotY": 0.5,
 				"fieldDefs": [
 					{
-						"identifier": "EntityPath",
+						"identifier": "entityPath",
 						"__type": "String",
 						"uid": 11,
 						"type": "F_String",
@@ -108,7 +108,46 @@
 						"acceptFileTypes": null,
 						"defaultOverride": {
 							"id": "V_String",
-							"params": ["assets.entities.player.lua"]
+							"params": ["assets/entities/player"]
+						}
+					}
+				]
+			},
+			{
+				"identifier": "Diamond",
+				"uid": 14,
+				"width": 16,
+				"height": 16,
+				"color": "#94D9B3",
+				"renderMode": "Tile",
+				"showName": false,
+				"tilesetId": 15,
+				"tileId": 0,
+				"tileRenderMode": "Crop",
+				"maxPerLevel": 0,
+				"limitBehavior": "DiscardOldOnes",
+				"pivotX": 0,
+				"pivotY": 0,
+				"fieldDefs": [
+					{
+						"identifier": "entityPath",
+						"__type": "String",
+						"uid": 16,
+						"type": "F_String",
+						"isArray": false,
+						"canBeNull": true,
+						"arrayMinLength": null,
+						"arrayMaxLength": null,
+						"editorDisplayMode": "Hidden",
+						"editorDisplayPos": "Above",
+						"editorAlwaysShow": false,
+						"min": null,
+						"max": null,
+						"regex": null,
+						"acceptFileTypes": null,
+						"defaultOverride": {
+							"id": "V_String",
+							"params": ["assets/entities/diamond"]
 						}
 					}
 				]
@@ -141,6 +180,18 @@
 				"padding": 0,
 				"savedSelections": [],
 				"cachedPixelData": { "opaqueTiles": "0000000000000000", "averageColors": "6963000000000000000000000000000000000000000000000000000000000000" }
+			},
+			{
+				"identifier": "Collectibles",
+				"uid": 15,
+				"relPath": "../spritesheets/Collectibles.png",
+				"pxWid": 64,
+				"pxHei": 64,
+				"tileGridSize": 16,
+				"spacing": 0,
+				"padding": 0,
+				"savedSelections": [],
+				"cachedPixelData": { "opaqueTiles": "0000000000000000", "averageColors": "69bd000000000000000000000000000000000000000000000000000000000000" }
 			}
 		],
 		"enums": [],
@@ -176,7 +227,39 @@
 					"autoLayerTiles": [],
 					"seed": 5382697,
 					"gridTiles": [],
-					"entityInstances": [{ "__identifier": "Player", "__grid": [7,5], "__tile": { "tilesetUid": 9, "srcRect": [0,0,32,32] }, "defUid": 5, "px": [112,80], "fieldInstances": [{ "__identifier": "EntityPath", "__value": "assets.entities.player.lua", "__type": "String", "defUid": 11, "realEditorValues": [] }] }]
+					"entityInstances": [
+						{ "__identifier": "Player", "__grid": [3,4], "__tile": { "tilesetUid": 9, "srcRect": [0,0,32,32] }, "defUid": 5, "px": [48,64], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/player", "__type": "String", "defUid": 11, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [8,7], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [128,112], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [9,7], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [144,112], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [10,7], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [160,112], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [11,7], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [176,112], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [12,7], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [192,112], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [13,7], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [208,112], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [12,6], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [192,96], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [11,6], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [176,96], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [10,6], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [160,96], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [9,6], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [144,96], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [10,5], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [160,80], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [11,5], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [176,80], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [18,4], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [288,64], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [19,4], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [304,64], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [19,3], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [304,48], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [18,3], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [288,48], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [17,4], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [272,64], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [20,4], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [320,64], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [27,3], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [432,48], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [29,3], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [464,48], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [28,3], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [448,48], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [30,3], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [480,48], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [29,2], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [464,32], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [28,2], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [448,32], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [30,8], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [480,128], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [29,8], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [464,128], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [28,8], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [448,128], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [27,8], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [432,128], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [28,7], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [448,112], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] },
+						{ "__identifier": "Diamond", "__grid": [29,7], "__tile": { "tilesetUid": 15, "srcRect": [0,0,16,16] }, "defUid": 14, "px": [464,112], "fieldInstances": [{ "__identifier": "entityPath", "__value": "assets/entities/diamond", "__type": "String", "defUid": 16, "realEditorValues": [] }] }
+					]
 				},
 				{
 					"__identifier": "Collisions",
