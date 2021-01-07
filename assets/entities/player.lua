@@ -4,23 +4,24 @@ local Player = class("Player", require "lib/entity")
 -- Components
 local vec2 = require "lib/hump/vector"
 
--- Local player variables
-local acceleration  = 8
-local maxSpeed      = 128
-local jumpForce     = 128+32
-local airBoost      = 7
-local airDrag       = 0.4
-local gravity       = 12
-local maxFallSpeed  = 8
-local canJump       = false
-
 function Player:load()
-    -- Set player on the floor
-    self.position.y = self.position.y + 4
-
     -- Player variables
     self.type           = "player"
     self.isGrounded     = false
+    self.zIndex         = 2
+    self.isVisible      = true
+
+    self.acceleration   = 8
+    self.maxSpeed       = 128
+    self.jumpForce      = 128 + 32
+    self.airBoost       = 7
+    self.airDrag        = 0.4
+    self.gravity        = 12
+    self.maxFallSpeed   = 8
+    self.canJump        = false
+
+    -- Set player on the floor
+    self.position.y = self.position.y + 4
 
     -- Set graphics
     self.sprite = {}
@@ -37,10 +38,10 @@ end
 
 function Player:update(dt)
     -- -------------------- Check for Collisions
-    isGrounded = self:checkGrounded()
+    self.isGrounded = self:checkGrounded()
 
     -- Gravity
-    if isGrounded then
+    if self.isGrounded then
         -- Player is on the ground
         local ax,ay,cols,len = self.world:check(self, self.position.x,self.position.y + 1)
 
@@ -66,7 +67,7 @@ function Player:update(dt)
             end
         end
 
-        self.velocity.y = self.velocity.y + gravity
+        self.velocity.y = self.velocity.y + self.gravity
     end
 
     -- -------------------- Player Input
@@ -79,24 +80,19 @@ function Player:update(dt)
     end
 
     -- Jumping
-    if love.keyboard.isDown("z") and isGrounded == true then
-        self.velocity.y = -jumpForce
-    elseif love.keyboard.isDown("z") and isGrounded == false then
+    if love.keyboard.isDown("z") and (self.isGrounded == true) then
+        self.velocity.y = -self.jumpForce
+    elseif love.keyboard.isDown("z") and (self.isGrounded == false) then
         if self.velocity.y < 0 then
-            self.velocity.y = self.velocity.y - airBoost
+            self.velocity.y = self.velocity.y - self.airBoost
         end
     end
 
-    if love.keyboard.isDown("space") then
-        -- self:destroy()
-        print(self.aabb)
-    end
-
     -- -------------------- Update Player Movement
-    local accel = acceleration
-    if isGrounded == false then accel = accel * airDrag end
+    local accel = self.acceleration
+    if self.isGrounded == false then accel = accel * self.airDrag end
 
-    local goal = direction * maxSpeed
+    local goal = direction * self.maxSpeed
     local temp = self.velocity:clone()
     temp = temp:lerp(goal, accel * dt)
     self.velocity.x = temp.x
@@ -122,12 +118,14 @@ function Player:movePlayer(dt)
         local other = cols[i].other
 
         if other.isCollectible then
-            other:destroy()
+            other:collect()
         end
     end
 end
 
 function Player:draw()
+    if (self.isVisible == false) then return end
+
     local dx,dy = math.floor(self.position.x), math.floor(self.position.y)
     local ox    = self.sprite.width/2 - self.aabb.width/2 - self.sprite.offset.x
     local oy    = self.sprite.height/2 - self.aabb.height/2 - self.sprite.offset.y

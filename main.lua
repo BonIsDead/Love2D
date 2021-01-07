@@ -102,6 +102,10 @@ function love.draw()
     currentCamera:attach(0,0, _gameWidth,_gameHeight, true)
         ldtkMap:draw(currentCamera)
 
+        local drawList = {}
+        local function drawSort(a,b) return a.zIndex < b.zIndex end
+        table.sort(_entities, drawSort)
+
         -- Draw entities
         for i, ent in ipairs(_entities) do
             if ent.draw then ent:draw() end

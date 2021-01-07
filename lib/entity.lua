@@ -9,6 +9,9 @@ function Entity:initialize(bumpWorld, x,y, t)
     self.world      = bumpWorld
     self.position   = vec2(x,y)
     self.velocity   = vec2()
+
+    self.isVisible  = false
+    self.zIndex     = 0
     -- Collision shape
     self.aabb       = { ["width"] = 8, ["height"] = 12, ["offsetx"] = 0, ["offsety"] = 0 }
     -- Other Information
